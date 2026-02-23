@@ -9,10 +9,10 @@ export default function ThemeToggle() {
   if (!theme) {
     return (
       <button
-        className="p-2 rounded-lg bg-[var(--card-bg)] border border-[var(--border-color)]"
+        className="p-2 rounded-lg bg-[#111] border border-[#222]"
         aria-label="Toggle theme"
       >
-        <Moon className="w-5 h-5 text-[var(--muted-dark)]" />
+        <Moon className="w-5 h-5 text-[#444]" />
       </button>
     );
   }
@@ -20,13 +20,13 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-[var(--card-bg)] border border-[var(--border-color)] hover:opacity-80 transition duration-300"
+      className="p-2 rounded-lg bg-[#111] border border-[#222] hover:border-[#00ff88] transition duration-300"
       aria-label="Toggle theme"
     >
       {theme === 'dark' ? (
         <Sun className="w-5 h-5 text-yellow-400" />
       ) : (
-        <Moon className="w-5 h-5 text-[#e94560]" />
+        <Moon className="w-5 h-5 text-[#00ff88]" />
       )}
     </button>
   );

@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { Brain, Video, Heart, MessageCircle, ArrowRight, Sparkles, Shield, Users } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Home() {
@@ -32,134 +31,145 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[var(--accent)] animate-spin" />
+      <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-[#00ff88] animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)]">
-      <header className="bg-[var(--card-bg)] shadow-lg">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-[#0d0d0d] text-white overflow-x-hidden">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0d0d0d]/80 backdrop-blur-md border-b border-[#1a1a1a]">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#e94560] to-[#0f3460] flex items-center justify-center">
-              <Brain className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-[#00ff88] flex items-center justify-center shadow-[0_0_20px_rgba(0,255,136,0.4)]">
+              <span className="text-xl font-bold text-black">M</span>
             </div>
-            <span className="text-xl font-bold text-[var(--foreground)]">MindWell</span>
+            <span className="text-xl font-bold tracking-tight">mindwell</span>
           </div>
-          <nav className="flex items-center gap-4">
+          <nav className="flex items-center gap-6">
             <ThemeToggle />
-            <Link href="/dashboard" className="text-[var(--muted)] hover:text-[var(--foreground)] transition duration-300">Dashboard</Link>
-            <Link href="/chat" className="text-[var(--muted)] hover:text-[var(--foreground)] transition duration-300">Chat</Link>
-            <Link href="/sign-in" className="px-5 py-2 text-[var(--muted)] hover:text-[var(--foreground)] transition duration-300">Sign In</Link>
-            <Link href="/sign-up" className="px-5 py-2 bg-gradient-to-r from-[#e94560] to-[#0f3460] text-white rounded-lg hover:shadow-lg hover:shadow-[#e94560]/30 transition duration-300">
-              Get Started
+            <Link href="/sign-in" className="text-[#888] hover:text-white transition duration-300 text-sm font-medium">sign in</Link>
+            <Link href="/sign-up" className="px-6 py-2 bg-[#00ff88] text-black rounded-lg text-sm font-bold hover:shadow-[0_0_20px_rgba(0,255,136,0.5)] transition duration-300">
+              get started
             </Link>
           </nav>
         </div>
       </header>
 
-      <main>
-        <section className="max-w-6xl mx-auto px-6 py-28 text-center">
-          <div className="inline-flex items-center gap-2 bg-[var(--card-bg)] px-5 py-2 rounded-full mb-8 shadow-[var(--card-shadow)]">
-            <Sparkles className="w-4 h-4 text-[var(--accent)]" />
-            <span className="text-[var(--muted)] text-sm">AI-Powered Mental Wellness</span>
-          </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-[var(--foreground)] mb-6 leading-tight">
-            Find Peace of Mind<br />
-            <span className="bg-gradient-to-r from-[#e94560] to-[#ff6b6b] bg-clip-text text-transparent">With AI Support</span>
-          </h1>
-          <p className="text-xl text-[var(--muted)] mb-10 max-w-2xl mx-auto leading-relaxed">
-            Your personal mental wellness companion. Track moods, chat with AI, and connect through secure video sessions.
-          </p>
-          <div className="flex gap-5 justify-center flex-wrap">
-            <Link href="/sign-up" className="px-8 py-4 bg-gradient-to-r from-[#e94560] to-[#0f3460] text-white rounded-xl text-lg hover:shadow-xl hover:shadow-[#e94560]/30 transition duration-300 flex items-center gap-2 font-semibold">
-              Start Free <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link href="/chat" className="px-8 py-4 bg-[var(--card-bg)] border border-[var(--border-color)] text-[var(--foreground)] rounded-xl text-lg hover:bg-[var(--card-shadow-light)] transition duration-300">
-              Try AI Chat
-            </Link>
-          </div>
-        </section>
-
-        <section className="max-w-6xl mx-auto px-6 py-16">
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-[var(--card-bg)] p-8 rounded-2xl shadow-[8px_8px_16px_var(--card-shadow),-8px_-8px_16px_var(--card-shadow-light)]">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#e94560] to-[#ff6b6b] flex items-center justify-center mb-5 shadow-lg">
-                <MessageCircle className="w-7 h-7 text-white" />
+      <main className="pt-24">
+        {/* Hero Section */}
+        <section className="max-w-7xl mx-auto px-6 py-20 md:py-32">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-block px-4 py-2 bg-[#1a1a1a] rounded-full mb-6 border border-[#333]">
+                <span className="text-[#00ff88] text-sm font-medium">✨ AI-Powered Wellness</span>
               </div>
-              <h3 className="text-xl font-bold text-[var(--foreground)] mb-3">AI Chat Support</h3>
-              <p className="text-[var(--muted)]">Chat with a compassionate AI that listens without judgment and provides thoughtful emotional support.</p>
-            </div>
-
-            <div className="bg-[var(--card-bg)] p-8 rounded-2xl shadow-[8px_8px_16px_var(--card-shadow),-8px_-8px_16px_var(--card-shadow-light)]">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#0f3460] to-[#16213e] flex items-center justify-center mb-5 shadow-lg border border-[var(--border-color)]">
-                <Heart className="w-7 h-7 text-[#e94560]" />
-              </div>
-              <h3 className="text-xl font-bold text-[var(--foreground)] mb-3">Mood Tracking</h3>
-              <p className="text-[var(--muted)]">Track daily moods with simple check-ins and discover patterns in your emotional wellbeing over time.</p>
-            </div>
-
-            <div className="bg-[var(--card-bg)] p-8 rounded-2xl shadow-[8px_8px_16px_var(--card-shadow),-8px_-8px_16px_var(--card-shadow-light)]">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#533483] to-[#0f3460] flex items-center justify-center mb-5 shadow-lg">
-                <Video className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-[var(--foreground)] mb-3">Video Sessions</h3>
-              <p className="text-[var(--muted)]">Connect face-to-face through secure, private video calls for more personal support when you need it.</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="max-w-6xl mx-auto px-6 py-12">
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-[var(--card-bg)] p-6 rounded-xl shadow-[5px_5px_10px_var(--card-shadow),-5px_-5px_10px_var(--card-shadow-light)] flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#e94560] to-[#0f3460] flex items-center justify-center">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h4 className="text-[var(--foreground)] font-semibold">Private & Secure</h4>
-                <p className="text-[var(--muted-dark)] text-sm">Your data stays confidential</p>
+              <h1 className="text-5xl md:text-7xl font-bold leading-[1.1] mb-6">
+                your mind.<br />
+                <span className="text-[#00ff88]">our priority.</span>
+              </h1>
+              <p className="text-xl text-[#888] mb-8 max-w-lg">
+                experience emotional support like never before. track moods, chat with AI, and feel better every day.
+              </p>
+              <div className="flex gap-4 flex-wrap">
+                <Link href="/sign-up" className="px-8 py-4 bg-[#00ff88] text-black rounded-xl text-lg font-bold hover:shadow-[0_0_30px_rgba(0,255,136,0.5)] transition duration-300">
+                  start free
+                </Link>
+                <Link href="/chat" className="px-8 py-4 bg-[#1a1a1a] border border-[#333] text-white rounded-xl text-lg font-medium hover:border-[#00ff88] transition duration-300">
+                  try ai chat
+                </Link>
               </div>
             </div>
-            <div className="bg-[var(--card-bg)] p-6 rounded-xl shadow-[5px_5px_10px_var(--card-shadow),-5px_-5px_10px_var(--card-shadow-light)] flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#533483] to-[#0f3460] flex items-center justify-center">
-                <Users className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h4 className="text-[var(--foreground)] font-semibold">24/7 Available</h4>
-                <p className="text-[var(--muted-dark)] text-sm">Support whenever you need</p>
-              </div>
-            </div>
-            <div className="bg-[var(--card-bg)] p-6 rounded-xl shadow-[5px_5px_10px_var(--card-shadow),-5px_-5px_10px_var(--card-shadow-light)] flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#0f3460] to-[#16213e] flex items-center justify-center border border-[var(--border-color)]">
-                <Brain className="w-6 h-6 text-[#e94560]" />
-              </div>
-              <div>
-                <h4 className="text-[var(--foreground)] font-semibold">Smart AI</h4>
-                <p className="text-[var(--muted-dark)] text-sm">Personalized conversations</p>
+            <div className="relative">
+              <div className="w-full h-[400px] md:h-[500px] bg-gradient-to-br from-[#00ff88]/20 to-[#00d4ff]/20 rounded-3xl border border-[#222] flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-8xl mb-4">🧠</div>
+                  <p className="text-[#00ff88] text-2xl font-bold">AI Companion</p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="max-w-4xl mx-auto px-6 py-20 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-[var(--foreground)] mb-6">
-            Take Control of Your Mental Wellness
+        {/* Features */}
+        <section className="max-w-7xl mx-auto px-6 py-20">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            not just <span className="text-[#00ff88]">another</span> app.
           </h2>
-          <p className="text-[var(--muted)] text-lg mb-8 max-w-xl mx-auto">
-            Join thousands who have found a safe, supportive space to express themselves and grow.
+          <p className="text-[#888] text-xl mb-12 max-w-2xl">
+            a complete mental wellness ecosystem designed for you.
           </p>
-          <Link href="/sign-up" className="inline-block px-10 py-4 bg-gradient-to-r from-[#e94560] to-[#0f3460] text-white rounded-xl text-lg hover:shadow-xl hover:shadow-[#e94560]/30 transition duration-300 font-bold">
-            Create Your Free Account
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-[#111] p-8 rounded-2xl border border-[#222] hover:border-[#00ff88] transition duration-300 group">
+              <div className="text-4xl mb-4 group-hover:scale-110 transition duration-300">💬</div>
+              <h3 className="text-xl font-bold mb-2">AI Chat</h3>
+              <p className="text-[#666]">talk to an AI that actually understands. compassionate, non-judgmental, available 24/7.</p>
+            </div>
+
+            <div className="bg-[#111] p-8 rounded-2xl border border-[#222] hover:border-[#00d4ff] transition duration-300 group">
+              <div className="text-4xl mb-4 group-hover:scale-110 transition duration-300">📊</div>
+              <h3 className="text-xl font-bold mb-2">Mood Tracking</h3>
+              <p className="text-[#666]">track your emotional journey. discover patterns. understand yourself better.</p>
+            </div>
+
+            <div className="bg-[#111] p-8 rounded-2xl border border-[#222] hover:border-[#ff6b6b] transition duration-300 group">
+              <div className="text-4xl mb-4 group-hover:scale-110 transition duration-300">🎥</div>
+              <h3 className="text-xl font-bold mb-2">Video Sessions</h3>
+              <p className="text-[#666]">face-to-face support. connect deeper with AI-powered video interactions.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Stats */}
+        <section className="max-w-7xl mx-auto px-6 py-20">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-[#00ff88] mb-2">24/7</div>
+              <div className="text-[#666]">AI Available</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-[#00d4ff] mb-2">100%</div>
+              <div className="text-[#666]">Private</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-[#ff6b6b] mb-2">Free</div>
+              <div className="text-[#666]">To Start</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-[#ffd93d] mb-2">∞</div>
+              <div className="text-[#666]">Possibilities</div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="max-w-7xl mx-auto px-6 py-20 text-center">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+            ready to feel <span className="text-[#00ff88]">better?</span>
+          </h2>
+          <p className="text-[#888] text-xl mb-8 max-w-xl mx-auto">
+            join thousands who have found their emotional support companion.
+          </p>
+          <Link href="/sign-up" className="inline-block px-12 py-5 bg-[#00ff88] text-black rounded-xl text-xl font-bold hover:shadow-[0_0_40px_rgba(0,255,136,0.6)] transition duration-300">
+            create free account
           </Link>
         </section>
       </main>
 
-      <footer className="bg-[var(--card-shadow)] border-t border-[var(--border-color)] py-8 mt-12">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <p className="text-[var(--muted)]">© 2026 MindWell AI. All rights reserved.</p>
-          <p className="mt-2 text-sm text-[var(--muted-dark)]">MindWell AI is not a substitute for professional medical advice.</p>
+      {/* Footer */}
+      <footer className="border-t border-[#1a1a1a] py-12 mt-12">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="flex items-center gap-2 justify-center mb-4">
+            <div className="w-8 h-8 rounded-lg bg-[#00ff88] flex items-center justify-center">
+              <span className="font-bold text-black">M</span>
+            </div>
+            <span className="font-bold">mindwell</span>
+          </div>
+          <p className="text-[#444] text-sm">© 2026 mindwell. made with ❤️ for your mental health.</p>
+          <p className="text-[#333] text-xs mt-2">mindwell AI is not a substitute for professional medical advice.</p>
         </div>
       </footer>
     </div>
