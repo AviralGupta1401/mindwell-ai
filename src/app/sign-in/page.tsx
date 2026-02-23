@@ -5,6 +5,7 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Brain, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -48,20 +49,23 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#1a1a2e] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
         <div className="text-center mb-10">
           <Link href="/" className="inline-flex items-center gap-3 justify-center mb-8">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#e94560] to-[#0f3460] flex items-center justify-center">
               <Brain className="w-7 h-7 text-white" />
             </div>
-            <span className="text-2xl font-bold text-white">MindWell</span>
+            <span className="text-2xl font-bold text-[var(--foreground)]">MindWell</span>
           </Link>
-          <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
-          <p className="text-gray-400">Sign in to continue your wellness journey</p>
+          <h1 className="text-3xl font-bold text-[var(--foreground)] mb-2">Welcome Back</h1>
+          <p className="text-[var(--muted)]">Sign in to continue your wellness journey</p>
         </div>
 
-        <div className="bg-[#16213e] p-8 rounded-2xl shadow-[8px_8px_16px_#0f1425,-8px_-8px_16px_#1e2a4a]">
+        <div className="bg-[var(--card-bg)] p-8 rounded-2xl shadow-[8px_8px_16px_var(--card-shadow),-8px_-8px_16px_var(--card-shadow-light)]">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <div className="bg-[#e94560]/10 border border-[#e94560]/30 text-[#ff6b6b] px-4 py-3 rounded-lg text-sm">
@@ -70,31 +74,31 @@ export default function SignInPage() {
             )}
 
             <div>
-              <label className="block text-gray-400 text-sm font-medium mb-3">Email</label>
+              <label className="block text-[var(--muted)] text-sm font-medium mb-3">Email</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted-dark)]" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-[#1a1a2e] border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-[#e94560] focus:shadow-[0_0_10px_rgba(233,69,96,0.3)] transition duration-300"
+                  className="w-full pl-12 pr-4 py-3 bg-[var(--input-bg)] border border-[var(--border-color)] rounded-lg text-[var(--foreground)] placeholder-[var(--muted-dark)] focus:outline-none focus:border-[#e94560] focus:shadow-[0_0_10px_rgba(233,69,96,0.3)] transition duration-300"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-gray-400 text-sm font-medium mb-3">Password</label>
+              <label className="block text-[var(--muted)] text-sm font-medium mb-3">Password</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted-dark)]" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-[#1a1a2e] border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-[#e94560] focus:shadow-[0_0_10px_rgba(233,69,96,0.3)] transition duration-300"
+                  className="w-full pl-12 pr-4 py-3 bg-[var(--input-bg)] border border-[var(--border-color)] rounded-lg text-[var(--foreground)] placeholder-[var(--muted-dark)] focus:outline-none focus:border-[#e94560] focus:shadow-[0_0_10px_rgba(233,69,96,0.3)] transition duration-300"
                 />
               </div>
             </div>
@@ -115,7 +119,7 @@ export default function SignInPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-400 text-sm">
+            <p className="text-[var(--muted)] text-sm">
               Don't have an account?{" "}
               <Link href="/sign-up" className="text-[#e94560] hover:text-[#ff6b6b] font-medium">
                 Sign up
@@ -125,7 +129,7 @@ export default function SignInPage() {
         </div>
 
         <div className="mt-8 text-center">
-          <Link href="/" className="text-gray-500 hover:text-white text-sm transition duration-300">
+          <Link href="/" className="text-[var(--muted-dark)] hover:text-[var(--foreground)] text-sm transition duration-300">
             ← Back to Home
           </Link>
         </div>
