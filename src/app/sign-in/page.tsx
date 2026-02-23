@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "@/lib/auth-client";
+import { useState, useEffect } from "react";
+import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Brain, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
@@ -13,24 +13,35 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    checkExistingSession();
+  }, []);
+
+  const checkExistingSession = async () => {
+    const { data } = await authClient.getSession();
+    if (data?.session) {
+      router.push("/dashboard");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      const { error } = await signIn.email({
+      const result = await authClient.signIn.email({
         email,
         password,
       });
 
-      if (error) {
-        setError(error.message || "Invalid credentials");
+      if (result.error) {
+        setError(result.error.message || "Invalid email or password");
       } else {
         router.push("/dashboard");
       }
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      setError(err.message || "Failed to sign in. Please try again.");
     } finally {
       setLoading(false);
     }

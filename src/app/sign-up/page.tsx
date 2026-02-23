@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { signUp } from "@/lib/auth-client";
+import { useState, useEffect } from "react";
+import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Brain, Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
@@ -14,25 +14,42 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    checkExistingSession();
+  }, []);
+
+  const checkExistingSession = async () => {
+    const { data } = await authClient.getSession();
+    if (data?.session) {
+      router.push("/dashboard");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
+    
     setLoading(true);
 
     try {
-      const { error } = await signUp.email({
+      const result = await authClient.signUp.email({
         email,
         password,
         name,
       });
 
-      if (error) {
-        setError(error.message || "Could not create account");
+      if (result.error) {
+        setError(result.error.message || "Failed to create account");
       } else {
         router.push("/dashboard");
       }
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      setError(err.message || "Failed to sign up. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -104,6 +121,7 @@ export default function SignUpPage() {
                   className="w-full pl-12 pr-4 py-3 bg-[#1a1a2e] border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-[#e94560] focus:shadow-[0_0_10px_rgba(233,69,96,0.3)] transition duration-300"
                 />
               </div>
+              <p className="text-xs text-gray-500 mt-1">Must be at least 8 characters</p>
             </div>
 
             <button
