@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Brain, MessageCircle, Video, TrendingUp, Calendar, LogOut, Loader2 } from 'lucide-react';
+import { MessageCircle, Video, TrendingUp, Calendar, LogOut, Loader2 } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface MoodEntry {
   _id: string;
@@ -59,8 +60,8 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#1a1a2e] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[#e94560] animate-spin" />
+      <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-[#00ff88] animate-spin" />
       </div>
     );
   }
@@ -68,62 +69,64 @@ export default function Dashboard() {
   if (!session) return null;
 
   return (
-    <div className="min-h-screen bg-[#1a1a2e]">
-      <header className="bg-[#16213e] shadow-lg">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-[#0d0d0d]">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0d0d0d]/80 backdrop-blur-md border-b border-[#1a1a1a]">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#e94560] to-[#0f3460] flex items-center justify-center">
-              <Brain className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-[#00ff88] flex items-center justify-center shadow-[0_0_20px_rgba(0,255,136,0.4)]">
+              <span className="text-xl font-bold text-black">M</span>
             </div>
-            <span className="text-xl font-bold text-white">MindWell</span>
+            <span className="text-xl font-bold tracking-tight">mindwell</span>
           </Link>
-          <div className="flex items-center gap-6">
-            <span className="text-gray-400">Welcome, <span className="text-white font-medium">{session.user.name}</span></span>
-            <button onClick={handleSignOut} className="flex items-center gap-2 px-4 py-2 text-gray-400 hover:text-white transition duration-300">
+          <div className="flex items-center gap-4">
+            <span className="text-[#666]">hey, <span className="text-white font-medium">{session.user.name}</span></span>
+            <ThemeToggle />
+            <button onClick={handleSignOut} className="flex items-center gap-2 px-4 py-2 text-[#666] hover:text-white transition duration-300">
               <LogOut className="w-4 h-4" />
-              Sign Out
+              <span className="text-sm">sign out</span>
             </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-10">
-        <h1 className="text-3xl font-bold text-white mb-8">Your Wellness Dashboard</h1>
+      <main className="pt-24 max-w-7xl mx-auto px-6 py-8">
+        <h1 className="text-4xl font-bold text-white mb-2">your dashboard</h1>
+        <p className="text-[#666] mb-8">track your wellness journey</p>
 
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Link href="/chat" className="bg-[#16213e] p-6 rounded-2xl shadow-[8px_8px_16px_#0f1425,-8px_-8px_16px_#1e2a4a] hover:shadow-[12px_12px_24px_#0f1425,-12px_-12px_24px_#1e2a4a] transition duration-300">
+          <Link href="/chat" className="bg-[#111] p-6 rounded-2xl border border-[#222] hover:border-[#00ff88] transition duration-300 group">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#e94560] to-[#ff6b6b] flex items-center justify-center">
-                <MessageCircle className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 rounded-xl bg-[#00ff88] flex items-center justify-center shadow-[0_0_15px_rgba(0,255,136,0.3)] group-hover:shadow-[0_0_25px_rgba(0,255,136,0.5)] transition duration-300">
+                <MessageCircle className="w-6 h-6 text-black" />
               </div>
               <div>
-                <h3 className="font-semibold text-white">AI Chat</h3>
-                <p className="text-sm text-gray-500">Talk to your AI companion</p>
+                <h3 className="font-bold text-white">AI Chat</h3>
+                <p className="text-sm text-[#666]">talk to your AI companion</p>
               </div>
             </div>
           </Link>
 
-          <Link href="/video" className="bg-[#16213e] p-6 rounded-2xl shadow-[8px_8px_16px_#0f1425,-8px_-8px_16px_#1e2a4a] hover:shadow-[12px_12px_24px_#0f1425,-12px_-12px_24px_#1e2a4a] transition duration-300">
+          <Link href="/video" className="bg-[#111] p-6 rounded-2xl border border-[#222] hover:border-[#00d4ff] transition duration-300 group">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0f3460] to-[#533483] flex items-center justify-center">
-                <Video className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 rounded-xl bg-[#00d4ff] flex items-center justify-center shadow-[0_0_15px_rgba(0,212,255,0.3)] group-hover:shadow-[0_0_25px_rgba(0,212,255,0.5)] transition duration-300">
+                <Video className="w-6 h-6 text-black" />
               </div>
               <div>
-                <h3 className="font-semibold text-white">Video Session</h3>
-                <p className="text-sm text-gray-500">Start a video call</p>
+                <h3 className="font-bold text-white">Video Session</h3>
+                <p className="text-sm text-[#666]">face-to-face with AI</p>
               </div>
             </div>
           </Link>
 
-          <div className="bg-[#16213e] p-6 rounded-2xl shadow-[8px_8px_16px_#0f1425,-8px_-8px_16px_#1e2a4a]">
+          <div className="bg-[#111] p-6 rounded-2xl border border-[#222]">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#533483] to-[#0f3460] flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 rounded-xl bg-[#ff6b6b] flex items-center justify-center shadow-[0_0_15px_rgba(255,107,107,0.3)]">
+                <TrendingUp className="w-6 h-6 text-black" />
               </div>
               <div>
-                <h3 className="font-semibold text-white">Mood Score</h3>
-                <p className="text-sm text-gray-500">
-                  {moodEntries.length > 0 ? `Latest: ${moodEntries[0].mood}/10` : 'Track your wellbeing'}
+                <h3 className="font-bold text-white">Mood Score</h3>
+                <p className="text-sm text-[#666]">
+                  {moodEntries.length > 0 ? `latest: ${moodEntries[0].mood}/10` : 'track your wellbeing'}
                 </p>
               </div>
             </div>
@@ -133,21 +136,24 @@ export default function Dashboard() {
         <div className="grid md:grid-cols-2 gap-6">
           <MoodTracker onMoodSaved={fetchMoods} />
 
-          <div className="bg-[#16213e] p-6 rounded-2xl shadow-[8px_8px_16px_#0f1425,-8px_-8px_16px_#1e2a4a]">
-            <h2 className="text-xl font-semibold text-white mb-5">Recent Activity</h2>
+          <div className="bg-[#111] p-6 rounded-2xl border border-[#222]">
+            <h2 className="text-xl font-bold text-white mb-5 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-[#00ff88]" />
+              recent activity
+            </h2>
             {moodEntries.length > 0 ? (
               <div className="space-y-4">
                 {moodEntries.slice(0, 3).map((entry) => (
-                  <div key={entry._id} className="flex items-center gap-3 text-gray-400">
-                    <TrendingUp className="w-5 h-5 text-[#e94560]" />
-                    <span>Mood: {entry.mood}/10 - {entry.note || 'No note'}</span>
+                  <div key={entry._id} className="flex items-center gap-3 text-[#666]">
+                    <TrendingUp className="w-4 h-4 text-[#00ff88]" />
+                    <span>mood: {entry.mood}/10 - {entry.note || 'no note'}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="space-y-4 text-gray-500">
-                <p>No recent activity yet.</p>
-                <p className="text-sm">Start by checking in with your mood!</p>
+              <div className="space-y-4 text-[#444]">
+                <p>no recent activity yet.</p>
+                <p className="text-sm">start by checking in with your mood!</p>
               </div>
             )}
           </div>
@@ -176,59 +182,61 @@ function MoodTracker({ onMoodSaved }: { onMoodSaved: () => void }) {
       });
 
       if (response.ok) {
-        setMessage('Mood saved successfully!');
+        setMessage('mood saved successfully!');
         setNote('');
         setMood(7);
         onMoodSaved();
       } else {
         const data = await response.json();
-        setMessage(data.error || 'Failed to save mood');
+        setMessage(data.error || 'failed to save mood');
       }
     } catch (error) {
-      setMessage('Failed to save mood');
+      setMessage('failed to save mood');
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div className="bg-[#16213e] p-6 rounded-2xl shadow-[8px_8px_16px_#0f1425,-8px_-8px_16px_#1e2a4a]">
-      <h2 className="text-xl font-semibold text-white mb-5 flex items-center gap-2">
-        <Calendar className="w-5 h-5 text-[#e94560]" />
-        Quick Mood Check-in
+    <div className="bg-[#111] p-6 rounded-2xl border border-[#222]">
+      <h2 className="text-xl font-bold text-white mb-5 flex items-center gap-2">
+        <Calendar className="w-5 h-5 text-[#00ff88]" />
+        quick mood check-in
       </h2>
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-400 mb-3">How are you feeling today? <span className="text-[#e94560]">{mood}/10</span></label>
+          <label className="block text-sm font-medium text-[#666] mb-3">
+            how are you feeling today? <span className="text-[#00ff88]">{mood}/10</span>
+          </label>
           <input 
             type="range" 
             value={mood}
             onChange={(e) => setMood(Number(e.target.value))}
             min="1" 
             max="10" 
-            className="w-full accent-[#e94560]"
+            className="w-full accent-[#00ff88]"
           />
-          <div className="flex justify-between text-xs text-gray-500 mt-2">
-            <span>Struggling</span>
-            <span>Great</span>
+          <div className="flex justify-between text-xs text-[#444] mt-2">
+            <span>struggling</span>
+            <span>great</span>
           </div>
         </div>
         <textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder="Add a note about how you're feeling..."
-          className="w-full p-4 bg-[#1a1a2e] border border-gray-700 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-[#e94560] transition duration-300"
+          placeholder="add a note about how you're feeling..."
+          className="w-full p-4 bg-[#0d0d0d] border border-[#222] rounded-lg text-white placeholder-[#444] focus:outline-none focus:border-[#00ff88] transition duration-300"
           rows={3}
         />
         <button 
           type="submit" 
           disabled={saving}
-          className="w-full py-3 bg-gradient-to-r from-[#e94560] to-[#0f3460] text-white rounded-lg hover:shadow-lg hover:shadow-[#e94560]/30 transition duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full py-3 bg-[#00ff88] text-black rounded-lg font-bold hover:shadow-[0_0_20px_rgba(0,255,136,0.5)] transition duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
         >
-          {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Save Check-in'}
+          {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : 'save check-in'}
         </button>
         {message && (
-          <p className={`text-sm text-center ${message.includes('success') ? 'text-green-400' : 'text-red-400'}`}>
+          <p className={`text-sm text-center ${message.includes('success') ? 'text-[#00ff88]' : 'text-[#ff6b6b]'}`}>
             {message}
           </p>
         )}
