@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, Loader2 } from "lucide-react";
-import ThemeToggle from "@/components/ThemeToggle";
+import { ArrowLeft } from "lucide-react";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -37,94 +36,84 @@ export default function SignInPage() {
       });
 
       if (result.error) {
-        setError(result.error.message || "Invalid email or password");
+        setError(result.error.message || "Invalid credentials");
       } else {
         router.push("/dashboard");
       }
     } catch (err: any) {
-      setError(err.message || "Failed to sign in. Please try again.");
+      setError(err.message || "Failed to sign in");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="absolute top-4 right-4">
-          <ThemeToggle />
-        </div>
-        
-        <div className="text-center mb-10">
-          <Link href="/" className="inline-flex items-center gap-2 justify-center mb-8">
-            <div className="w-12 h-12 rounded-xl bg-[#00ff88] flex items-center justify-center shadow-[0_0_20px_rgba(0,255,136,0.4)]">
-              <span className="text-xl font-bold text-black">M</span>
-            </div>
-          </Link>
-          <h1 className="text-3xl font-bold text-white mb-2">welcome back</h1>
-          <p className="text-[#666]">continue your wellness journey</p>
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-100 h-100 bg-green-500/10 rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-100 h-100 bg-cyan-500/10 rounded-full blur-[100px]"></div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 rounded-2xl mb-4">
+            <span className="text-3xl font-bold text-black">M</span>
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
+          <p className="text-zinc-400">Sign in to continue your journey</p>
         </div>
 
-        <div className="bg-[#111] p-8 rounded-2xl border border-[#222]">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-8">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="bg-[#ff6b6b]/10 border border-[#ff6b6b]/30 text-[#ff6b6b] px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm text-center">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-[#666] text-sm font-medium mb-3">email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder="Email"
                 required
-                className="w-full px-4 py-3 bg-[#0d0d0d] border border-[#222] rounded-lg text-white placeholder-[#444] focus:outline-none focus:border-[#00ff88] transition duration-300"
+                className="w-full p-4 bg-black border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-green-500 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-[#666] text-sm font-medium mb-3">password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Password"
                 required
-                className="w-full px-4 py-3 bg-[#0d0d0d] border border-[#222] rounded-lg text-white placeholder-[#444] focus:outline-none focus:border-[#00ff88] transition duration-300"
+                className="w-full p-4 bg-black border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-green-500 transition-all"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#00ff88] text-black rounded-lg font-bold hover:shadow-[0_0_20px_rgba(0,255,136,0.5)] transition duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-4 bg-green-500 text-black font-semibold rounded-xl hover:bg-green-400 hover:shadow-[0_0_20px_rgba(34,197,94,0.5)] transition-all disabled:opacity-50"
             >
-              {loading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>
-                  sign in <ArrowRight className="w-5 h-5" />
-                </>
-              )}
+              {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-[#666] text-sm">
-              don't have an account?{" "}
-              <Link href="/sign-up" className="text-[#00ff88] hover:text-[#00cc6a] font-medium">
-                sign up
-              </Link>
-            </p>
-          </div>
+          <p className="mt-6 text-center text-zinc-400 text-sm">
+            Don&apos;t have an account?{" "}
+            <Link href="/sign-up" className="text-green-500 hover:text-green-400">
+              Sign up
+            </Link>
+          </p>
         </div>
 
-        <div className="mt-8 text-center">
-          <Link href="/" className="text-[#444] hover:text-white text-sm transition duration-300">
-            ← back to home
+        <div className="mt-6 text-center">
+          <Link href="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-300 text-sm transition">
+            <ArrowLeft className="w-4 h-4" />
+            Back to home
           </Link>
         </div>
       </div>

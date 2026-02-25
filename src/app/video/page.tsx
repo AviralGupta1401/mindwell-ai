@@ -1,10 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Video, VideoOff, Mic, MicOff, PhoneOff, Copy, Check, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Video, VideoOff, Mic, MicOff, PhoneOff, Copy, Check, AlertCircle, Home, MessageCircle, Brain, LogOut, Menu } from 'lucide-react';
 import Peer from 'peerjs';
 import Link from 'next/link';
-import ThemeToggle from '@/components/ThemeToggle';
 
 export default function VideoPage() {
   const [peerId, setPeerId] = useState('');
@@ -15,6 +14,7 @@ export default function VideoPage() {
   const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState('Initializing...');
   const [error, setError] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -24,12 +24,8 @@ export default function VideoPage() {
   useEffect(() => {
     initPeer();
     return () => {
-      if (peerRef.current) {
-        peerRef.current.destroy();
-      }
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-      }
+      if (peerRef.current) peerRef.current.destroy();
+      if (streamRef.current) streamRef.current.getTracks().forEach(track => track.stop());
     };
   }, []);
 
@@ -38,53 +34,37 @@ export default function VideoPage() {
     setError('');
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { width: 640, height: 480 }, 
-        audio: true 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 640, height: 480 },
+        audio: true
       });
       streamRef.current = stream;
-      
-      if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream;
-      }
+      if (localVideoRef.current) localVideoRef.current.srcObject = stream;
 
       setStatus('Connecting to server...');
-      
-      const peer = new Peer({
-        debug: 2
-      });
+      const peer = new Peer({ debug: 2 });
 
       peer.on('open', (id) => {
-        console.log('Peer connected with ID:', id);
         setPeerId(id);
         setStatus('Ready to connect');
       });
 
       peer.on('call', (call) => {
-        console.log('Incoming call:', call);
         call.answer(stream);
         call.on('stream', (remoteStream) => {
-          console.log('Received remote stream');
-          if (remoteVideoRef.current) {
-            remoteVideoRef.current.srcObject = remoteStream;
-          }
+          if (remoteVideoRef.current) remoteVideoRef.current.srcObject = remoteStream;
           setInCall(true);
         });
-        call.on('error', (err) => {
-          console.error('Call error:', err);
-          setError('Call failed');
-        });
+        call.on('error', () => setError('Call failed'));
       });
 
-      peer.on('error', (err) => {
-        console.error('Peer error:', err);
+      peer.on('error', () => {
         setError('Connection failed. Please refresh and try again.');
         setStatus('Error');
       });
 
       peerRef.current = peer;
     } catch (err: any) {
-      console.error('Media error:', err);
       if (err.name === 'NotAllowedError') {
         setError('Camera/mic access denied. Please allow permissions and try again.');
       } else if (err.name === 'NotFoundError') {
@@ -98,54 +78,37 @@ export default function VideoPage() {
 
   const startCall = () => {
     if (!peerRef.current || !targetId || !streamRef.current) return;
-
     setStatus('Calling...');
     const call = peerRef.current.call(targetId, streamRef.current);
-    
     call.on('stream', (remoteStream) => {
-      if (remoteVideoRef.current) {
-        remoteVideoRef.current.srcObject = remoteStream;
-      }
+      if (remoteVideoRef.current) remoteVideoRef.current.srcObject = remoteStream;
       setInCall(true);
       setStatus('Connected');
     });
-
-    call.on('error', (err) => {
-      console.error('Call error:', err);
+    call.on('error', () => {
       setError('Call failed. Check the ID and try again.');
       setStatus('Error');
     });
-
-    setTimeout(() => {
-      if (!inCall) {
-        setStatus('Ready to connect');
-      }
-    }, 10000);
+    setTimeout(() => { if (!inCall) setStatus('Ready to connect'); }, 10000);
   };
 
   const endCall = () => {
     setInCall(false);
     setTargetId('');
-    if (remoteVideoRef.current) {
-      remoteVideoRef.current.srcObject = null;
-    }
+    if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
     setStatus('Ready to connect');
   };
 
   const toggleMute = () => {
     if (streamRef.current) {
-      streamRef.current.getAudioTracks().forEach(track => {
-        track.enabled = !track.enabled;
-      });
+      streamRef.current.getAudioTracks().forEach(t => { t.enabled = !t.enabled; });
       setIsMuted(!isMuted);
     }
   };
 
   const toggleVideo = () => {
     if (streamRef.current) {
-      streamRef.current.getVideoTracks().forEach(track => {
-        track.enabled = !track.enabled;
-      });
+      streamRef.current.getVideoTracks().forEach(t => { t.enabled = !t.enabled; });
       setIsVideoOn(!isVideoOn);
     }
   };
@@ -156,116 +119,185 @@ export default function VideoPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const navItems = [
+    { href: '/dashboard', label: 'Dashboard', icon: Home },
+    { href: '/chat', label: 'AI Chat', icon: MessageCircle },
+    { href: '/video', label: 'Video Session', icon: Video },
+    { href: '/ai-session', label: 'AI Session', icon: Brain },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0d0d0d]/80 backdrop-blur-md border-b border-[#1a1a1a]">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="p-2 hover:bg-[#111] rounded-lg transition">
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
-            <h1 className="font-semibold">video session</h1>
+    <div className="min-h-screen">
+      {/* Sidebar */}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-zinc-900 border-r border-zinc-800 transition-transform duration-200 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+        <div className="flex flex-col h-full p-5">
+          <div className="flex items-center gap-3 mb-10 px-1">
+            <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
+              <span className="text-xl font-bold text-black">M</span>
+            </div>
+            <span className="text-xl font-bold text-green-500">MindWell</span>
           </div>
-          <span className={`text-sm ${status === 'Error' ? 'text-[#ff6b6b]' : 'text-[#666]'}`}>
+
+          <nav className="flex-1 space-y-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = item.href === '/video';
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                    isActive
+                      ? 'bg-green-500/10 text-green-500'
+                      : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="font-medium">{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="border-t border-zinc-800 pt-4">
+            <button
+              onClick={() => {
+                fetch('/api/auth/sign-out', { method: 'POST' }).then(() => {
+                  window.location.href = '/';
+                });
+              }}
+              className="flex items-center gap-3 px-4 py-3 w-full text-zinc-400 hover:bg-zinc-800 hover:text-red-400 rounded-xl transition-colors"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="font-medium">Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-40 bg-black/60 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      {/* Main content */}
+      <div className="md:pl-64">
+        {/* Header */}
+        <header className="border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="md:hidden p-2 hover:bg-zinc-800 rounded-lg"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+            <h1 className="font-semibold text-lg">Video Session</h1>
+          </div>
+          <span className={`text-sm ${status === 'Error' ? 'text-red-400' : 'text-zinc-400'}`}>
             {status}
           </span>
-        </div>
-      </header>
+        </header>
 
-      <main className="pt-20 max-w-4xl mx-auto p-4">
-        {error && (
-          <div className="bg-[#ff6b6b]/10 border border-[#ff6b6b]/30 text-[#ff6b6b] px-4 py-3 rounded-lg mb-4 flex items-center gap-2">
-            <AlertCircle className="w-5 h-5" />
-            {error}
-          </div>
-        )}
+        <div className="p-4 md:p-8 max-w-4xl mx-auto">
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl mb-6 flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
 
-        <div className="grid md:grid-cols-2 gap-4 mb-4">
-          <div className="relative bg-[#111] rounded-xl overflow-hidden aspect-video border border-[#222]">
-            <video ref={localVideoRef} autoPlay muted playsInline className="w-full h-full object-cover" />
-            <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-sm">you</div>
-            {!isVideoOn && (
-              <div className="absolute inset-0 flex items-center justify-center bg-[#0d0d0d]">
-                <VideoOff className="w-12 h-12 text-[#444]" />
-              </div>
-            )}
-          </div>
+          {/* Video grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+            <div className="relative bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden aspect-video">
+              <video ref={localVideoRef} autoPlay muted playsInline className="w-full h-full object-cover" />
+              <div className="absolute bottom-3 left-3 bg-black/60 px-3 py-1.5 rounded-lg text-sm font-medium">You</div>
+              {!isVideoOn && (
+                <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
+                  <div className="w-20 h-20 bg-zinc-800 rounded-full flex items-center justify-center">
+                    <VideoOff className="w-10 h-10 text-zinc-500" />
+                  </div>
+                </div>
+              )}
+            </div>
 
-          <div className="relative bg-[#111] rounded-xl overflow-hidden aspect-video border border-[#222]">
-            {inCall ? (
-              <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <p className="text-[#444]">waiting for connection...</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {!inCall && (
-          <div className="bg-[#111] rounded-xl p-5 mb-4 border border-[#222]">
-            <h3 className="font-medium mb-4 text-white">start a call</h3>
-            <div className="space-y-3">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={peerId}
-                  readOnly
-                  placeholder="your ID (copy and share)"
-                  className="flex-1 bg-[#0d0d0d] border border-[#222] rounded-lg px-3 py-2 text-sm text-white"
-                />
-                <button
-                  onClick={copyId}
-                  className="p-2 bg-[#0d0d0d] border border-[#222] rounded-lg hover:border-[#00ff88] transition"
-                >
-                  {copied ? <Check className="w-5 h-5 text-[#00ff88]" /> : <Copy className="w-5 h-5" />}
-                </button>
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={targetId}
-                  onChange={(e) => setTargetId(e.target.value)}
-                  placeholder="enter friend's ID to call"
-                  className="flex-1 bg-[#0d0d0d] border border-[#222] rounded-lg px-3 py-2 text-sm text-white"
-                />
-                <button
-                  onClick={startCall}
-                  disabled={!targetId || !peerId || status === 'Error'}
-                  className="px-4 py-2 bg-[#00ff88] text-black rounded-lg font-bold hover:shadow-[0_0_20px_rgba(0,255,136,0.5)] disabled:opacity-50 transition"
-                >
-                  call
-                </button>
-              </div>
+            <div className="relative bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden aspect-video">
+              {inCall ? (
+                <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Video className="w-8 h-8 text-zinc-500" />
+                    </div>
+                    <p className="text-zinc-500">Waiting for connection...</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        )}
 
-        <div className="flex justify-center gap-4">
-          <button
-            onClick={toggleMute}
-            className={`p-4 rounded-xl ${isMuted ? 'bg-[#ff6b6b]' : 'bg-[#111] border border-[#222]'} hover:border-[#00ff88] transition`}
-          >
-            {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-          </button>
-          
-          <button
-            onClick={toggleVideo}
-            className={`p-4 rounded-xl ${!isVideoOn ? 'bg-[#ff6b6b]' : 'bg-[#111] border border-[#222]'} hover:border-[#00ff88] transition`}
-          >
-            {isVideoOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
-          </button>
-          
-          {inCall && (
-            <button
-              onClick={endCall}
-              className="p-4 rounded-xl bg-[#ff6b6b] hover:bg-[#ff5252] transition"
-            >
-              <PhoneOff className="w-6 h-6" />
-            </button>
+          {/* Call controls */}
+          {!inCall && (
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-6">
+              <h3 className="font-medium mb-4">Start a call</h3>
+              <div className="space-y-3">
+                <div className="flex gap-3">
+                  <input
+                    type="text"
+                    value={peerId}
+                    readOnly
+                    placeholder="Your ID (copy and share)"
+                    className="flex-1 bg-black border border-zinc-800 rounded-xl px-4 py-3 text-sm placeholder-zinc-500"
+                  />
+                  <button
+                    onClick={copyId}
+                    className="p-3 bg-zinc-800 border border-zinc-700 rounded-xl hover:border-green-500 transition-colors"
+                  >
+                    {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-zinc-400" />}
+                  </button>
+                </div>
+                <div className="flex gap-3">
+                  <input
+                    type="text"
+                    value={targetId}
+                    onChange={(e) => setTargetId(e.target.value)}
+                    placeholder="Enter friend's ID to call"
+                    className="flex-1 bg-black border border-zinc-800 rounded-xl px-4 py-3 text-sm placeholder-zinc-500 focus:outline-none focus:border-green-500 transition-colors"
+                  />
+                  <button
+                    onClick={startCall}
+                    disabled={!targetId || !peerId || status === 'Error'}
+                    className="px-6 py-3 bg-green-500 text-black font-semibold rounded-xl hover:bg-green-400 disabled:opacity-50 transition-colors"
+                  >
+                    Call
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
+
+          {/* Media controls */}
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={toggleMute}
+              className={`p-4 rounded-2xl transition-colors ${isMuted ? 'bg-red-500 text-white' : 'bg-zinc-800 border border-zinc-700 hover:border-green-500'}`}
+            >
+              {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+            </button>
+            <button
+              onClick={toggleVideo}
+              className={`p-4 rounded-2xl transition-colors ${!isVideoOn ? 'bg-red-500 text-white' : 'bg-zinc-800 border border-zinc-700 hover:border-green-500'}`}
+            >
+              {isVideoOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
+            </button>
+            {inCall && (
+              <button onClick={endCall} className="p-4 rounded-2xl bg-red-500 hover:bg-red-600 transition-colors">
+                <PhoneOff className="w-6 h-6" />
+              </button>
+            )}
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
