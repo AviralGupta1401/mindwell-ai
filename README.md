@@ -24,7 +24,7 @@ AI-powered mental wellness companion with chat, mood tracking, video sessions, a
 
 ## Project Structure
 
-```
+``` 
 mindwell-ai/
 ├── server/          # Express.js backend (port 3001)
 │   └── src/
