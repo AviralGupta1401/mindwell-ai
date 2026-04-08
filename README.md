@@ -9,7 +9,7 @@ AI-powered mental wellness companion with chat, mood tracking, video sessions, a
 - **AI Therapy Session** - Face-to-face video session with real-time facial emotion detection + voice analysis
 - **Video Calls** - Peer-to-peer video calling between users (WebRTC/PeerJS)
 - **Authentication** - Secure email/password auth with 30-day sessions
-
+ 
 ## Tech Stack
 
 | Layer | Technologies |
